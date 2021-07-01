@@ -34,6 +34,10 @@
                 <template v-slot:cell(answers_translated)="data">
                     {{ answerTranslationsCount(data.item) }}
                 </template>
+
+                <template v-slot:cell(available)="data">
+                    {{ availableQuestionsCount(data.item) }}
+                </template>
             </b-table>
         </transition>
     </div>
@@ -94,6 +98,11 @@
 
                             return classes
                         }
+                    },
+                    {
+                        key: 'available',
+                        sortable: false,
+                        tdClass: ['align-middle', 'text-center']
                     }
                 ]
 
@@ -113,6 +122,11 @@
             },
             answerTranslationsCount(language) {
                 const item = this.statistics.answers.translations.find(translation => language.code === translation.code)
+
+                return item ? item.count : 0
+            },
+            availableQuestionsCount(language) {
+                const item = this.statistics.questions.available.find(available => language.code === available.code)
 
                 return item ? item.count : 0
             }
