@@ -38,6 +38,13 @@
                 <template v-slot:cell(available)="data">
                     {{ availableQuestionsCount(data.item) }}
                 </template>
+
+                <template v-slot:head(available)="data">
+                    <span v-b-tooltip.hover title="Number of answered questions that are available to Chatterbot.">
+                        Available
+                        <font-awesome-icon class="text-info" :icon="['fas', 'info-circle']" />
+                    </span>
+                </template>
             </b-table>
         </transition>
     </div>

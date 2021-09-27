@@ -54,7 +54,7 @@ class StatisticsController extends Controller
         $languages = Language::all();
 
         foreach ($languages as $language) {
-            $count = Question::with(['languages', 'topic', 'answer'])
+            $count = Question::with(['languages', 'answer'])
                 ->whereState('status', [TranslatedQuestion::class, PublishedQuestion::class])
                 ->whereHas('languages', function(Builder $query) use ($language) {
                     $query->where('id', '=', $language->id);
