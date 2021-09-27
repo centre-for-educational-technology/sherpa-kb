@@ -126,9 +126,7 @@
                 return item ? item.count : 0
             },
             availableQuestionsCount(language) {
-                const item = this.statistics.questions.available.find(available => language.code === available.code)
-
-                return item ? item.count : 0
+                return this.statistics.questions.available.hasOwnProperty(language.code) ? this.statistics.questions.available[language.code].count : 0
             }
         },
         created() {

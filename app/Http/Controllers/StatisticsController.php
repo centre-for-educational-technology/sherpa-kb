@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use App\Question;
 use App\Answer;
+use App\Language;
 
 class StatisticsController extends Controller
 {
@@ -65,7 +66,7 @@ class StatisticsController extends Controller
                         });
                 })->count();
 
-            $data['questions']['available'] = [
+            $data['questions']['available'][$language->code] = [
                 'count' => $count,
                 'code' => $language->code,
             ];
