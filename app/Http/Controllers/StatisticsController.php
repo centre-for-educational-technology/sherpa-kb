@@ -2,9 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\States\Answer\Published as PublishedAnswer;
+use App\States\Answer\Translated as TranslatedAnswer;
+use App\States\Question\Published as PublishedQuestion;
+use App\States\Question\Translated as TranslatedQuestion;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use App\Question;
 use App\Answer;
+use App\Language;
 
 class StatisticsController extends Controller
 {
@@ -44,6 +50,27 @@ class StatisticsController extends Controller
                     ->get(),
             ],
         ];
+
+        $languages = Language::all();
+
+        foreach ($languages as $language) {
+            $count = Question::with(['languages', 'answer'])
+                ->whereState('status', [TranslatedQuestion::class, PublishedQuestion::class])
+                ->whereHas('languages', function(Builder $query) use ($language) {
+                    $query->where('id', '=', $language->id);
+                })
+                ->whereHas('answer', function(Builder $query) use ($language) {
+                    $query->whereState('status', [TranslatedAnswer::class, PublishedAnswer::class])
+                        ->whereHas('languages', function(Builder $query) use ($language) {
+                            $query->where('id', '=', $language->id);
+                        });
+                })->count();
+
+            $data['questions']['available'][$language->code] = [
+                'count' => $count,
+                'code' => $language->code,
+            ];
+        }
 
         return response()->json($data);
     }

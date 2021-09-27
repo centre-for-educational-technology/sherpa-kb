@@ -34,6 +34,17 @@
                 <template v-slot:cell(answers_translated)="data">
                     {{ answerTranslationsCount(data.item) }}
                 </template>
+
+                <template v-slot:cell(available)="data">
+                    {{ availableQuestionsCount(data.item) }}
+                </template>
+
+                <template v-slot:head(available)="data">
+                    <span v-b-tooltip.hover title="Number of answered questions that are available to Chatterbot.">
+                        Available
+                        <font-awesome-icon class="text-info" :icon="['fas', 'info-circle']" />
+                    </span>
+                </template>
             </b-table>
         </transition>
     </div>
@@ -94,6 +105,11 @@
 
                             return classes
                         }
+                    },
+                    {
+                        key: 'available',
+                        sortable: false,
+                        tdClass: ['align-middle', 'text-center']
                     }
                 ]
 
@@ -115,6 +131,9 @@
                 const item = this.statistics.answers.translations.find(translation => language.code === translation.code)
 
                 return item ? item.count : 0
+            },
+            availableQuestionsCount(language) {
+                return this.statistics.questions.available.hasOwnProperty(language.code) ? this.statistics.questions.available[language.code].count : 0
             }
         },
         created() {
