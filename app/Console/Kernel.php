@@ -24,7 +24,12 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('sherpa:send-daily-emails')->daily();
+        $schedule->command('sherpa:send-daily-emails')
+            //->timezone('Europe/Tallinn')
+            ->dailyAt('00:01');
+        $schedule->command('sherpa:send-weekly-emails')
+            //->timezone('Europe/Tallinn')
+            ->weekly();
     }
 
     /**

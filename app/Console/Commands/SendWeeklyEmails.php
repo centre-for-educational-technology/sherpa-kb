@@ -68,17 +68,17 @@ class SendWeeklyEmails extends Command
 
         $languages->each(function($language) use ($languages) {
             $query = PendingQuestion::whereState('status', Pending::class)
-                ->whereHas('languages', function(Builder $query) use ($language, $languages) {
+                ->whereHas('languages', function(Builder $query) use ($language) {
                     $query->where('language_id', $language->id);
                 });
-            
-            // English is a special case that should ignore ramslations to other languages
+
+            // English is a special case that should ignore translations to other languages
             if ($language->code === 'en') {
                 $this->applyEnglishCondition($languages, $query);
             }
 
             $count = $query->count();
-            
+
             if ($count > 0) {
                 Log::debug('Suitable Pending Questions found.', [
                     'language' => $language->name,
