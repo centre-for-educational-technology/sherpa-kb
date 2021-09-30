@@ -21,6 +21,10 @@ class User extends Authenticatable
     }
     use LogsActivity;
 
+    const ROLE_LANGUAGE_EXPERT = 'expert';
+    const ROLE_MASTER_EXPERT = 'master';
+    const ROLE_ADMINISTRATOR = 'administrator';
+
     protected static $logAttributes = ['*'];
     protected static $submitEmptyLogs = false;
 
@@ -76,7 +80,7 @@ class User extends Authenticatable
      */
     public function isLanguageExpert(): bool
     {
-        return $this->hasRole('expert');
+        return $this->hasRole(self::ROLE_LANGUAGE_EXPERT);
     }
 
     /**
@@ -86,7 +90,7 @@ class User extends Authenticatable
      */
     public function isMasterExpert(): bool
     {
-        return $this->hasRole('master');
+        return $this->hasRole(self::ROLE_MASTER_EXPERT);
     }
 
     /**
@@ -96,6 +100,6 @@ class User extends Authenticatable
      */
     public function isAdministrator(): bool
     {
-        return $this->hasRole('administrator');
+        return $this->hasRole(self::ROLE_ADMINISTRATOR);
     }
 }

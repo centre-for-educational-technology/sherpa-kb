@@ -12,10 +12,11 @@ abstract class KnowledgeBaseTestCase extends TestCase
 
     use RefreshDatabase;
 
-    const ROLE_LANGUAGE_EXPERT = 'expert';
-    const ROLE_MASTER_EXPERT = 'master';
-    const ROLE_ADMIN = 'administrator';
-
+    /**
+     * Run parent setup function and make sure that database is seeded.
+     *
+     * @return void
+     */
     public function setUp(): void
     {
         parent::setUp();
@@ -68,7 +69,7 @@ abstract class KnowledgeBaseTestCase extends TestCase
     protected function createLanguageExpert(string $language = 'en', array $attributes = []): User {
         $attributes['language_id'] = $this->getLanguageIdByCode($language);
 
-        return $this->createUser($attributes, [self::ROLE_LANGUAGE_EXPERT]);
+        return $this->createUser($attributes, [User::ROLE_LANGUAGE_EXPERT]);
     }
 
     /**
@@ -79,7 +80,7 @@ abstract class KnowledgeBaseTestCase extends TestCase
      */
     protected function createMasterExpert(array $attributes = []): User
     {
-        return $this->createUser($attributes, [self::ROLE_MASTER_EXPERT]);
+        return $this->createUser($attributes, [User::ROLE_MASTER_EXPERT]);
     }
 
     /**
@@ -90,7 +91,7 @@ abstract class KnowledgeBaseTestCase extends TestCase
      */
     protected function createAdministrator(array $attributes = []): User
     {
-        return $this->createUser($attributes, [self::ROLE_ADMIN]);
+        return $this->createUser($attributes, [User::ROLE_ADMINISTRATOR]);
     }
 
 }
