@@ -56,13 +56,8 @@ class SendDailyEmails extends Command
                     $query->where('language_id', $language->id);
                 })
                 ->count();
-            
+
             if ($count > 0) {
-                Log::debug('Suitable Pending Questions found.', [
-                    'language' => $language->name,
-                    'count' => $count,
-                    'command' => self::class,
-                ]);
                 $languageExperts = User::role('expert')
                     ->where('language_id', $language->id)
                     ->get();
@@ -72,9 +67,9 @@ class SendDailyEmails extends Command
                 });
 
                 if ($languageExperts->isEmpty()) {
-                    // TODO Consider a fallback with notification to Master Expert
                     Log::debug('No suitable language experts could be found!', [
                         'language' => $language->name,
+                        'count' => $count,
                         'command' => self::class,
                     ]);
                 }
