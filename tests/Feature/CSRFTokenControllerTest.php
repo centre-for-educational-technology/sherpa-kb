@@ -2,12 +2,8 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-
 class CSRFTokenControllerTest extends KnowledgeBaseTestCase
 {
-
-    use RefreshDatabase;
 
     /**
      * Test CSRF token refresh with an anonymous user.
