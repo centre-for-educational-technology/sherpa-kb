@@ -1,10 +1,12 @@
 {
-    "name": "laravel/laravel",
+    "name": "sherpa/knowledge-base",
     "type": "project",
-    "description": "The Laravel Framework.",
+    "description": "SHERPA project Knowledge Base service.",
     "keywords": [
-        "framework",
-        "laravel"
+        "laravel",
+        "sherpa",
+        "knowledge base",
+        "web"
     ],
     "license": "MIT",
     "require": {
