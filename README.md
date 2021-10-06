@@ -40,7 +40,7 @@ Please check the **composer.json** for Laravel version requirement. The version 
 
 Copy .env.example file to .env and fill in all the necessary configurations. Environment should be configured for production with initial portion of configurations declaring that and disabling debugging. This could be used as a basis:
 
-```
+```dotenv
 APP_NAME="SHERPA Knowledge Base"
 APP_ENV=production
 APP_KEY=<SOME-UNIQUE-KEY>
@@ -52,7 +52,7 @@ In addition to that you will need to configure the database connection, mailer, 
 
 Make sure that the database has been configured properly before running database migrations. Go to the application home catalog and run these commands in order to set up the application (make sure you use the code from **production** branch outside of development):
 
-```
+```shell
 composer install --no-dev
 php artisan key:generate
 php artisan migrate
@@ -65,7 +65,7 @@ It might also be a good idea to configure [caching](https://laravel.com/docs/8.x
 
 Once that is done, you would need to create an account and assign it an administrator role. After that all the user management could be done through the user management UI. That would include creating new user account and assigning roles. This command should get the job done (please replace the arguments with correct values):
 
-```
+```shell
 php artisan auth:create-admin {name} {email} {password}
 ```
 
@@ -82,3 +82,13 @@ The easiest way would be to just create a [Pusher Channels](https://pusher.com/c
 Follow the installation instructions without adding the **--no-dev** to composer command. Make sure that Node.js runtime with NPM package manager is present and run `npm install`. You will be able to run all the commands that are outlined in **package.json** file as soon as the dependencies are installed. The ones that make most sense are `npm run watch` and `npm run prod`. The first one will watch for changes and rebuild static assets during development and the second one will create a production build.
 
 Development is done on any branch except for **production**, which is a special branch that has stable code ready for use in the live environment. This branch should also include the latest build of static assets (styles, scripts and possibly some others).
+
+### Docker
+
+[Laravel Sail](https://laravel.com/docs/8.x/sail) is used for running in development. Please use `docker-compose.yml`
+file in the root of the directory. Please note that internal access to containers to be used in the `.env` file are:
+* mysql
+* redis
+* mailhog
+
+`CACHE_DRIVER` and `SESSION_DRIVER` should be set to `redis`.
