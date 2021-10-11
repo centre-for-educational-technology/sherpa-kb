@@ -41,6 +41,11 @@ class AnswerDeleted implements ShouldBroadcastNow
         return new PrivateChannel('App.Sync');
     }
 
+    /**
+     * Answer data to broadcast.
+     *
+     * @return array
+     */
     public function broadcastWith()
     {
         return (new AnswerResource($this->answer))->toArray(request());

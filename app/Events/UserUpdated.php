@@ -2,52 +2,52 @@
 
 namespace App\Events;
 
-use App\Http\Resources\AnswerResource;
-use App\Answer;
+use App\Http\Resources\UserResource;
+use App\User;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class AnswerCreated implements ShouldBroadcastNow
+class UserUpdated implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
-     * Answer instance.
+     * User instance.
      *
-     * @var /App/Answer
+     * @var /App/User
      */
-    public $answer;
+    public $user;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(Answer $answer)
+    public function __construct(User $user)
     {
-        $this->answer = $answer;
+        $this->user = $user;
     }
 
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return \Illuminate\Broadcasting\Channel|array
+     * @return \Illuminate\Broadcasting\Channel
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('App.Sync');
+        return new PrivateChannel('App.User.'.$this->user->id);
     }
 
     /**
-     * Answer data to broadcast.
+     * User data to broadcast.
      *
      * @return array
      */
-    public function broadcastWith()
+    public function broadcastWith(): array
     {
-        return (new AnswerResource($this->answer))->toArray(request());
+        return (new UserResource($this->user))->toArray(request());
     }
 }

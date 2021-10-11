@@ -41,6 +41,11 @@ class TopicCreated implements ShouldBroadcastNow
         return new PrivateChannel('App.Sync');
     }
 
+    /**
+     * Topic data to broadcast.
+     *
+     * @return array
+     */
     public function broadcastWith()
     {
         return (new TopicResource($this->topic))->toArray(request());

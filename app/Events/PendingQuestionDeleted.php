@@ -41,6 +41,11 @@ class PendingQuestionDeleted implements ShouldBroadcastNow
         return new PrivateChannel('App.Sync');
     }
 
+    /**
+     * PendingQuestion data to broadcast.
+     *
+     * @return array
+     */
     public function broadcastWith()
     {
         return (new PendingQuestionResource($this->pendingQuestion))->toArray(request());

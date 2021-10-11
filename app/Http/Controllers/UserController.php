@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\UserUpdated;
 use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\Hash;
@@ -34,7 +35,7 @@ class UserController extends Controller
         if ($request->wantsJson()) {
             return UserResource::collection(User::with(['language', 'roles'])->get());
         }
-        
+
         return view('users');
     }
 
@@ -109,7 +110,7 @@ class UserController extends Controller
         if (isset($data['email']) && $user->email !== $data['email']) {
             $updated['email'] = $data['email'];
         }
-        
+
         if (isset($data['password']) && $data['password']) {
             $updated['password'] = Hash::make($data['password']);
         }
@@ -127,8 +128,10 @@ class UserController extends Controller
                 $roles[] = $administrator->id;
             }
         }
-        
+
         $user->syncRoles($roles);
+
+        broadcast(new UserUpdated($user->refresh()));
 
         return new UserResource($user->refresh());
     }

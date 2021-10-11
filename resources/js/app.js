@@ -44,11 +44,14 @@ const app = new Vue({
     store,
     data() {
         return {
+            userId: null,
             appSyncActive: false,
             connectionState: 'initialized'
         }
     },
     created() {
+        this.userId = JSON.parse(document.querySelector('meta[name="current-user"]').content).id
+
         this.$on('init-app-sync', () => {
             if (!this.appSyncActive) {
                 this.initAppSync()
@@ -85,6 +88,7 @@ const app = new Vue({
         if (window.Echo) {
             if (this.appSyncActive) {
                 Echo.leave('App.Sync')
+                Echo.leave(`App.User.${this.userId}`)
             }
 
             Echo.disconnect()
@@ -134,6 +138,11 @@ const app = new Vue({
                 })
                 .listen('PendingQuestionDeleted', e => {
                     this.$store.dispatch('pendingQuestions/localDeletePendingQuestion', e)
+                })
+
+            Echo.private(`App.User.${this.userId}`)
+                .listen('UserUpdated', e => {
+                    this.$store.dispatch('app/setUser', e)
                 })
 
             this.appSyncActive = true
