@@ -13,7 +13,7 @@ class PendingQuestionPolicy
     /**
      * Allow admin to perform any actions
      *
-     * @param App/User $user
+     * @param \App\User $user
      * @param string $ability
      * @return true|void
      */
