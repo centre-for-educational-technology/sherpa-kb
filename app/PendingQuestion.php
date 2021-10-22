@@ -2,15 +2,15 @@
 
 namespace App;
 
+use App\States\PendingQuestion\Canceled;
+use App\States\PendingQuestion\Completed;
+use App\States\PendingQuestion\Pending;
+use App\States\PendingQuestion\PendingQuestionState;
+use App\States\PendingQuestion\Propagated;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Spatie\ModelStates\HasStates;
 use Spatie\Activitylog\Traits\LogsActivity;
-use App\States\PendingQuestion\PendingQuestionState;
-use App\States\PendingQuestion\Pending;
-use App\States\PendingQuestion\Propagated;
-use App\States\PendingQuestion\Completed;
-use App\States\PendingQuestion\Canceled;
+use Spatie\ModelStates\HasStates;
 
 class PendingQuestion extends Model
 {

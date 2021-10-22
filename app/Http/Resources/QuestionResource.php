@@ -16,11 +16,11 @@ class QuestionResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'descriptions' => $this->languages->keyBy('code')->map(function($language) {
+            'descriptions' => $this->languages->keyBy('code')->map(function ($language) {
                 return $language->pivot->description;
             }),
-            'topic' => $this->topic ? new TopicResource($this->topic) : NULL,
-            'answer' => $this->answer ? $this->answer->id : NULL,
+            'topic' => $this->topic ? new TopicResource($this->topic) : null,
+            'answer' => $this->answer ? $this->answer->id : null,
             'status' => [
                 'value' => $this->status->getValue(),
                 'status' => $this->status->status(),

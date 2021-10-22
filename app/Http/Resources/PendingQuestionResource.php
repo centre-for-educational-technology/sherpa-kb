@@ -16,7 +16,7 @@ class PendingQuestionResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'descriptions' => $this->languages->keyBy('code')->map(function($language) {
+            'descriptions' => $this->languages->keyBy('code')->map(function ($language) {
                 return $language->pivot->description;
             }),
             'group' => $this->group_no,

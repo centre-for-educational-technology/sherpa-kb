@@ -2,8 +2,8 @@
 
 namespace App\Events;
 
-use App\Http\Resources\AnswerResource;
 use App\Answer;
+use App\Http\Resources\AnswerResource;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;

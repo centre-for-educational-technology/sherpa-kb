@@ -11,10 +11,10 @@ class TopicPolicy
     use HandlesAuthorization;
 
     /**
-     * Allow admin to perform any actions
+     * Allow admin to perform any actions.
      *
-     * @param \App\User $user
-     * @param string $ability
+     * @param  \App\User  $user
+     * @param  string  $ability
      * @return true|void
      */
     public function before($user, $ability)
@@ -39,7 +39,7 @@ class TopicPolicy
      * Determine whether the user can view the model.
      *
      * @param  \App\User  $user
-     * @param  \App\Topic $topic
+     * @param  \App\Topic  $topic
      * @return mixed
      */
     public function view(User $user, Topic $topic)
@@ -62,7 +62,7 @@ class TopicPolicy
      * Determine whether the user can update the model.
      *
      * @param  \App\User  $user
-     * @param  \App\Topic $topic
+     * @param  \App\Topic  $topic
      * @return mixed
      */
     public function update(User $user, Topic $topic)
@@ -74,7 +74,7 @@ class TopicPolicy
      * Determine whether the user can delete the model.
      *
      * @param  \App\User  $user
-     * @param  \App\Topic $topic
+     * @param  \App\Topic  $topic
      * @return mixed
      */
     public function delete(User $user, Topic $topic)
@@ -86,7 +86,7 @@ class TopicPolicy
      * Determine whether the user can restore the model.
      *
      * @param  \App\User  $user
-     * @param  \App\Topic $topic
+     * @param  \App\Topic  $topic
      * @return mixed
      */
     public function restore(User $user, Topic $topic)
@@ -98,7 +98,7 @@ class TopicPolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\User  $user
-     * @param  \App\Topic $topic
+     * @param  \App\Topic  $topic
      * @return mixed
      */
     public function forceDelete(User $user, Topic $topic)

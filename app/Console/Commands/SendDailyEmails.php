@@ -2,16 +2,16 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Language;
+use App\Mail\DailyPendingQuestions;
 use App\PendingQuestion;
 use App\States\PendingQuestion\Pending;
-use Carbon\Carbon;
 use App\User;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\DailyPendingQuestions;
-use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
+use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class SendDailyEmails extends Command
 {
@@ -48,11 +48,11 @@ class SendDailyEmails extends Command
     {
         $languages = Language::all();
 
-        $languages->each(function($language) {
+        $languages->each(function ($language) {
             $count = PendingQuestion::whereState('status', Pending::class)
                 ->whereColumn('created_at', 'updated_at')
                 ->whereDate('created_at', Carbon::yesterday())
-                ->whereHas('languages', function(Builder $query) use ($language) {
+                ->whereHas('languages', function (Builder $query) use ($language) {
                     $query->where('language_id', $language->id);
                 })
                 ->count();
@@ -62,7 +62,7 @@ class SendDailyEmails extends Command
                     ->where('language_id', $language->id)
                     ->get();
 
-                $languageExperts->whenNotEmpty(function($user) use ($language, $count) {
+                $languageExperts->whenNotEmpty(function ($user) use ($language, $count) {
                     Mail::to($user)->send(new DailyPendingQuestions($language, $count));
                 });
 

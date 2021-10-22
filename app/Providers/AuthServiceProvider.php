@@ -4,11 +4,11 @@ namespace App\Providers;
 
 use App\Answer;
 use App\PendingQuestion;
-use App\Policies\TopicPolicy;
-use App\Question;
 use App\Policies\AnswerPolicy;
 use App\Policies\PendingQuestionPolicy;
 use App\Policies\QuestionPolicy;
+use App\Policies\TopicPolicy;
+use App\Question;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 

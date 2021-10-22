@@ -11,12 +11,12 @@ class CSRFTokenController extends Controller
     /**
      * Refreshes CSRF token and returns a new one.
      *
-     * @param Request $request
+     * @param  Request  $request
      * @return JsonResponse
      */
     public function refresh(Request $request): JsonResponse
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return response()->json([], 403);
         }
 

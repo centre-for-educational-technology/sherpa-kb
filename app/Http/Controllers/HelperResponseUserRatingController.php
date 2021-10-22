@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\DB;
 class HelperResponseUserRatingController extends Controller
 {
     /**
-     * Inserts Helper user response rating question-answer-rating data into the database
+     * Inserts Helper user response rating question-answer-rating data into the database.
      *
-     * @param Request $request
+     * @param  Request  $request
      * @return JsonResponse
      */
     public function store(Request $request): JsonResponse

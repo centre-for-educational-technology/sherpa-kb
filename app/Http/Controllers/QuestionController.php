@@ -2,36 +2,36 @@
 
 namespace App\Http\Controllers;
 
+use App\Answer;
 use App\Events\QuestionCreated;
 use App\Events\QuestionDeleted;
 use App\Events\QuestionUpdated;
-use Illuminate\Http\Request;
-use App\Question;
 use App\Http\Resources\QuestionResource;
-use App\Topic;
-use Illuminate\Validation\Rule;
-use App\States\Question\QuestionState;
 use App\Language;
-use App\Answer;
+use App\Question;
 use App\Services\LanguageService;
-use Illuminate\Support\Collection;
 use App\States\Answer\Published as PublishedAnswer;
 use App\States\Answer\Translated as TranslatedAnswer;
 use App\States\Question\Published as PublishedQuestion;
+use App\States\Question\QuestionState;
 use App\States\Question\Translated as TranslatedQuestion;
+use App\Topic;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+use Illuminate\Validation\Rule;
 
 class QuestionController extends Controller
 {
     /**
-     * LanguageService instance
+     * LanguageService instance.
      *
      * @var LanguageService
      */
     private $languageService;
 
     /**
-     * Create new controller instance
+     * Create new controller instance.
      *
      * @return void
      */
@@ -46,19 +46,19 @@ class QuestionController extends Controller
      * Process validated descriptions and turn those into data set to be used with languages relation.
      * Desctiptions with empty values are removed.
      *
-     * @param array $data
+     * @param  array  $data
      * @return Collection
      */
     private function processDescriptions(array $data): Collection
     {
         return collect($data)
-        ->keyBy(function($single) {
+        ->keyBy(function ($single) {
             return $this->languageService->getLanguageIdByCode($single['code']);
         })
-        ->filter(function($single) {
+        ->filter(function ($single) {
             return trim($single['value']) !== '';
         })
-        ->map(function($single) {
+        ->map(function ($single) {
             return [
                 'description' => $single['value'],
             ];
@@ -86,7 +86,7 @@ class QuestionController extends Controller
     {
         $this->authorize('viewAny', Question::class);
 
-        return Question::getStatesFor('status')->map(function($state) {
+        return Question::getStatesFor('status')->map(function ($state) {
             return [
                 'value' => $state::getMorphClass(),
                 'text' => $state::status(),
@@ -97,10 +97,11 @@ class QuestionController extends Controller
     /**
      * Create new Question and respond with QuestionResource.
      *
-     * @param Request $request
+     * @param  Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         $this->authorize('create', Question::class);
 
         $validatedData = $request->validate([
@@ -133,15 +134,15 @@ class QuestionController extends Controller
     /**
      * Update existing Question and respond with QuestionResource or code 422 if state transition is not allowed.
      *
-     * @param Request $request
-     * @param Question $question
+     * @param  Request  $request
+     * @param  Question  $question
      * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, Question $question)
     {
         $this->authorize('update', $question);
 
-        $states = Question::getStatesFor('status')->map(function($state) {
+        $states = Question::getStatesFor('status')->map(function ($state) {
             return $state::getMorphClass();
         });
         $validatedData = $request->validate([
@@ -160,7 +161,7 @@ class QuestionController extends Controller
         if ($request->has('status')) {
             $statusClass = QuestionState::resolveStateClass($request->get('status'));
 
-            if (!$question->canTransitionTo($statusClass) && !$question->status->is($statusClass)) {
+            if (! $question->canTransitionTo($statusClass) && ! $question->status->is($statusClass)) {
                 return response()->json([
                     'message' => 'Status transition is not allowed!',
                 ], 422);
@@ -195,7 +196,7 @@ class QuestionController extends Controller
     /**
      * Responds with published questions, with published answers that have both been translated to a given language.
      *
-     * @param Language $language
+     * @param  Language  $language
      * @return \Illuminate\Http\JsonResponse
      */
     public function apiForLanguage(Language $language)
@@ -204,17 +205,17 @@ class QuestionController extends Controller
 
         Question::with(['languages', 'topic', 'answer'])
         ->whereState('status', [TranslatedQuestion::class, PublishedQuestion::class])
-        ->whereHas('languages', function(Builder $query) use ($language) {
+        ->whereHas('languages', function (Builder $query) use ($language) {
             $query->where('id', '=', $language->id);
         })
-        ->whereHas('answer', function(Builder $query) use ($language) {
+        ->whereHas('answer', function (Builder $query) use ($language) {
             $query->whereState('status', [TranslatedAnswer::class, PublishedAnswer::class])
-            ->whereHas('languages', function(Builder $query) use ($language) {
+            ->whereHas('languages', function (Builder $query) use ($language) {
                 $query->where('id', '=', $language->id);
             });
         })
-        ->chunk(50, function($questions) use ($language, &$data) {
-            foreach($questions as $question) {
+        ->chunk(50, function ($questions) use ($language, &$data) {
+            foreach ($questions as $question) {
                 $data[] = [
                     'id' => $question->id,
                     'description' => $question->languages->keyBy('id')->get($language->id)->pivot->description,
@@ -226,7 +227,7 @@ class QuestionController extends Controller
                     'topic' => $question->topic ? [
                         'id' => $question->topic->id,
                         'description' => $question->topic->description,
-                    ] : NULL,
+                    ] : null,
                     'status' => $question->status,
                 ];
             }
@@ -238,8 +239,8 @@ class QuestionController extends Controller
     /**
      * Responds with published questions, with published answers that have been translated to a given language that belong to a given topic.
      *
-     * @param Language $language
-     * @param Topic $topic
+     * @param  Language  $language
+     * @param  Topic  $topic
      * @return \Illuminate\Http\JsonResponse
      */
     public function apiForLanguageAndTopic(Language $language, Topic $topic)
@@ -248,18 +249,18 @@ class QuestionController extends Controller
 
         Question::with(['languages', 'topic', 'answer'])
         ->whereState('status', [TranslatedQuestion::class, PublishedQuestion::class])
-        ->whereHas('languages', function(Builder $query) use ($language) {
+        ->whereHas('languages', function (Builder $query) use ($language) {
             $query->where('id', '=', $language->id);
         })
-        ->whereHas('answer', function(Builder $query) use ($language) {
+        ->whereHas('answer', function (Builder $query) use ($language) {
             $query->whereState('status', [TranslatedAnswer::class, PublishedAnswer::class])
-            ->whereHas('languages', function(Builder $query) use ($language) {
+            ->whereHas('languages', function (Builder $query) use ($language) {
                 $query->where('id', '=', $language->id);
             });
         })
         ->where('topic_id', '=', $topic->id)
-        ->chunk(50, function($questions) use ($language, &$data) {
-            foreach($questions as $question) {
+        ->chunk(50, function ($questions) use ($language, &$data) {
+            foreach ($questions as $question) {
                 $data[] = [
                     'id' => $question->id,
                     'description' => $question->languages->keyBy('id')->get($language->id)->pivot->description,
@@ -283,9 +284,9 @@ class QuestionController extends Controller
     /**
      * Removes question from the system.
      *
-     * @param Question $question
-     *
+     * @param  Question  $question
      * @return JsonResponse
+     *
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function delete(Question $question)

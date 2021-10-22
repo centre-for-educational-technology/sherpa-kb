@@ -2,12 +2,12 @@
 
 namespace Tests\Unit;
 
+use App\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Notifications\Notifiable;
 use PHPUnit\Framework\TestCase;
-use App\User;
 use ReflectionMethod;
 use ReflectionProperty;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -109,10 +109,10 @@ class UserModelTest extends TestCase
     }
 
     /**
-     *
      * Test User attributes.
      *
      * @returns void
+     *
      * @throws \ReflectionException
      */
     public function test_attributes()
@@ -157,5 +157,4 @@ class UserModelTest extends TestCase
         $this->assertTrue($isAdministrator->isPublic());
         $this->assertEquals('bool', $isAdministrator->getReturnType()->getName());
     }
-
 }

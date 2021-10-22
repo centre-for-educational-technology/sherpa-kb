@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Events\UserUpdated;
-use Illuminate\Http\Request;
-use App\User;
-use Illuminate\Support\Facades\Hash;
-use Spatie\Permission\Models\Role;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\RoleResource;
 use App\Http\Resources\UserResource;
 use App\Language;
+use App\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -52,7 +52,7 @@ class UserController extends Controller
     /**
      * Create new User and respond with JSON.
      *
-     * @param Request $request
+     * @param  Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
@@ -86,8 +86,8 @@ class UserController extends Controller
     /**
      * Update existing User and respond with JSON.
      *
-     * @param Request $request
-     * @param User $user
+     * @param  Request  $request
+     * @param  User  $user
      * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, User $user)
@@ -124,7 +124,7 @@ class UserController extends Controller
         // Retain administrator role for current user
         if (Auth::user()->is($user) && $user->hasRole('administrator')) {
             $administrator = Role::findByName('administrator');
-            if (!in_array($administrator->id, $roles)) {
+            if (! in_array($administrator->id, $roles)) {
                 $roles[] = $administrator->id;
             }
         }
@@ -139,7 +139,7 @@ class UserController extends Controller
     /**
      * Delete a User and respond with JSON.
      *
-     * @param User $user
+     * @param  User  $user
      * @return \Illuminate\Http\JsonResponse
      */
     public function delete(User $user)

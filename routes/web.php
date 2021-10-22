@@ -1,15 +1,15 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\QuestionController;
-use App\Http\Controllers\PendingQuestionController;
 use App\Http\Controllers\AnswerController;
-use App\Http\Controllers\StatisticsController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\TopicController;
 use App\Http\Controllers\CSRFTokenController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PendingQuestionController;
+use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\StatisticsController;
+use App\Http\Controllers\TopicController;
+use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,7 +63,7 @@ Route::delete('/users/{user}', [UserController::class, 'delete']);
 
 Route::get('statistics', [StatisticsController::class, 'index']);
 
-Route::prefix('topics')->group(function() {
+Route::prefix('topics')->group(function () {
     Route::get('/', [TopicController::class, 'list']);
     Route::post('/', [TopicController::class, 'store']);
     Route::put('{topic}', [TopicController::class, 'update']);

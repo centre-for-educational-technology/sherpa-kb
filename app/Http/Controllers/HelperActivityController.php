@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
 
 class HelperActivityController extends Controller
 {
     /**
-     * Inserts Helper activity question-answer data into the database
+     * Inserts Helper activity question-answer data into the database.
      *
-     * @param Request $request
+     * @param  Request  $request
      * @return JsonResponse
      */
     public function store(Request $request): JsonResponse

@@ -13,12 +13,13 @@ class LanguageController extends Controller
      */
     public function api()
     {
-        $languages = Language::all()->map(function($language) {
+        $languages = Language::all()->map(function ($language) {
             return [
                 'code' => $language->code,
                 'name' => $language->name,
             ];
         });
+
         return response()->json($languages);
     }
 }
