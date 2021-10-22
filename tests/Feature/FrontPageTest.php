@@ -34,5 +34,4 @@ class FrontPageTest extends KnowledgeBaseTestCase
         $response->assertStatus(302);
         $response->assertRedirect('/home');
     }
-
 }

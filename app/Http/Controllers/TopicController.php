@@ -19,12 +19,13 @@ class TopicController extends Controller
      */
     public function api(): JsonResponse
     {
-        $topics = Topic::all()->map(function($topic) {
+        $topics = Topic::all()->map(function ($topic) {
             return [
                 'id' => $topic->id,
                 'description' => $topic->description,
             ];
         });
+
         return response()->json($topics);
     }
 
@@ -32,6 +33,7 @@ class TopicController extends Controller
      * Returns a list of all topics.
      *
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     *
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function list()
@@ -44,9 +46,9 @@ class TopicController extends Controller
     /**
      * Stored new topic in the database.
      *
-     * @param Request $request
-     *
+     * @param  Request  $request
      * @return JsonResponse
+     *
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function store(Request $request)
@@ -69,10 +71,10 @@ class TopicController extends Controller
     /**
      * Updated an alreayd existing topic.
      *
-     * @param Request $request
-     * @param Topic $topic
-     *
+     * @param  Request  $request
+     * @param  Topic  $topic
      * @return JsonResponse
+     *
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function update(Request $request, Topic $topic)
@@ -94,9 +96,9 @@ class TopicController extends Controller
     /**
      * Removes a topic from the system.
      *
-     * @param Topic $topic
-     *
+     * @param  Topic  $topic
      * @return JsonResponse
+     *
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function delete(Topic $topic)

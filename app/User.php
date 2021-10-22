@@ -5,11 +5,11 @@ namespace App;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Spatie\Permission\Traits\HasRoles;
 use Spatie\Activitylog\Traits\LogsActivity;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
@@ -76,7 +76,7 @@ class User extends Authenticatable
     /**
      * Determines if user is a language expert.
      *
-     * @return boolean
+     * @return bool
      */
     public function isLanguageExpert(): bool
     {
@@ -86,7 +86,7 @@ class User extends Authenticatable
     /**
      * Determines if user is a master expert.
      *
-     * @return boolean
+     * @return bool
      */
     public function isMasterExpert(): bool
     {
@@ -96,7 +96,7 @@ class User extends Authenticatable
     /**
      * Determines if user is an administrator.
      *
-     * @return boolean
+     * @return bool
      */
     public function isAdministrator(): bool
     {

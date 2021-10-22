@@ -3,20 +3,20 @@
 namespace App\Policies;
 
 use App\Question;
-use App\User;
-use Illuminate\Auth\Access\HandlesAuthorization;
 use App\States\Question\InTranslation;
 use App\States\Question\Translated;
+use App\User;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class QuestionPolicy
 {
     use HandlesAuthorization;
 
     /**
-     * Allow admin to perform any actions
+     * Allow admin to perform any actions.
      *
-     * @param \App\User $user
-     * @param string $ability
+     * @param  \App\User  $user
+     * @param  string  $ability
      * @return true|void
      */
     public function before($user, $ability)
@@ -83,7 +83,7 @@ class QuestionPolicy
     {
         if ($user->isMasterExpert()) {
             return true;
-        } else if ($user->isLanguageExpert() && ($question->status->is(Translated::class) || $question->status->is(InTranslation::class))) {
+        } elseif ($user->isLanguageExpert() && ($question->status->is(Translated::class) || $question->status->is(InTranslation::class))) {
             return true;
         }
 

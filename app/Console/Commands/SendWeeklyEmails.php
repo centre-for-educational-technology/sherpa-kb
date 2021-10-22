@@ -2,16 +2,16 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Language;
+use App\Mail\WeeklyPendingQuestions;
 use App\PendingQuestion;
 use App\States\PendingQuestion\Pending;
 use App\User;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\WeeklyPendingQuestions;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class SendWeeklyEmails extends Command
 {
@@ -42,17 +42,18 @@ class SendWeeklyEmails extends Command
     /**
      * Applies special condition to English query that would make sure other languages are disregarded.
      *
-     * @param Collection $languages
-     * @param Builder $query
+     * @param  Collection  $languages
+     * @param  Builder  $query
      * @return void
      */
-    private function applyEnglishCondition(Collection $languages, Builder &$query) {
-        $inValue = $languages->filter(function($language) {
+    private function applyEnglishCondition(Collection $languages, Builder &$query)
+    {
+        $inValue = $languages->filter(function ($language) {
             return $language->code !== 'en';
-        })->map(function($language) {
+        })->map(function ($language) {
             return $language->id;
         });
-        $query->whereDoesntHave('languages', function(Builder $query) use ($inValue) {
+        $query->whereDoesntHave('languages', function (Builder $query) use ($inValue) {
             $query->whereIn('language_id', $inValue);
         });
     }
@@ -66,9 +67,9 @@ class SendWeeklyEmails extends Command
     {
         $languages = Language::all();
 
-        $languages->each(function($language) use ($languages) {
+        $languages->each(function ($language) use ($languages) {
             $query = PendingQuestion::whereState('status', Pending::class)
-                ->whereHas('languages', function(Builder $query) use ($language) {
+                ->whereHas('languages', function (Builder $query) use ($language) {
                     $query->where('language_id', $language->id);
                 });
 
@@ -84,7 +85,7 @@ class SendWeeklyEmails extends Command
                     ->where('language_id', $language->id)
                     ->get();
 
-                $languageExperts->whenNotEmpty(function($user) use ($language, $count) {
+                $languageExperts->whenNotEmpty(function ($user) use ($language, $count) {
                     Mail::to($user)->send(new WeeklyPendingQuestions($language, $count));
                 });
 

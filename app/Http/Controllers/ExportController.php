@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Language;
 use App\Question;
-use App\States\Question\Published as PublishedQuestion;
-use App\States\Question\Translated as TranslatedQuestion;
 use App\States\Answer\Published as PublishedAnswer;
 use App\States\Answer\Translated as TranslatedAnswer;
+use App\States\Question\Published as PublishedQuestion;
+use App\States\Question\Translated as TranslatedQuestion;
 use Illuminate\Database\Eloquent\Builder;
 
 class ExportController extends Controller
@@ -23,17 +23,17 @@ class ExportController extends Controller
 
         Question::with(['languages', 'topic', 'answer'])
         ->whereState('status', [TranslatedQuestion::class, PublishedQuestion::class])
-        ->whereHas('languages', function(Builder $query) use ($language) {
+        ->whereHas('languages', function (Builder $query) use ($language) {
             $query->where('id', '=', $language->id);
         })
-        ->whereHas('answer', function(Builder $query) use ($language) {
+        ->whereHas('answer', function (Builder $query) use ($language) {
             $query->whereState('status', [TranslatedAnswer::class, PublishedAnswer::class])
-            ->whereHas('languages', function(Builder $query) use ($language) {
+            ->whereHas('languages', function (Builder $query) use ($language) {
                 $query->where('id', '=', $language->id);
             });
         })
-        ->chunk(50, function($questions) use ($language, &$data) {
-            foreach($questions as $question) {
+        ->chunk(50, function ($questions) use ($language, &$data) {
+            foreach ($questions as $question) {
                 $data[] = [
                     'question' => $question->languages->keyBy('id')->get($language->id)->pivot->description,
                     'answer' => $question->answer->languages->keyBy('id')->get($language->id)->pivot->description,

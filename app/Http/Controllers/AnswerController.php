@@ -2,32 +2,32 @@
 
 namespace App\Http\Controllers;
 
+use App\Answer;
 use App\Events\AnswerCreated;
 use App\Events\AnswerDeleted;
 use App\Events\AnswerUpdated;
-use Illuminate\Http\Request;
-use App\Answer;
-use App\Language;
 use App\Http\Resources\AnswerResource;
-use Illuminate\Validation\Rule;
-use App\States\Answer\AnswerState;
-use App\States\Answer\Translated;
-use App\States\Answer\Published;
+use App\Language;
 use App\Services\LanguageService;
+use App\States\Answer\AnswerState;
+use App\States\Answer\Published;
+use App\States\Answer\Translated;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Validation\Rule;
 
 class AnswerController extends Controller
 {
     /**
-     * LanguageService instance
+     * LanguageService instance.
      *
      * @var LanguageService
      */
     private $languageService;
 
     /**
-     * Create new controller instance
+     * Create new controller instance.
      *
      * @return void
      */
@@ -42,19 +42,19 @@ class AnswerController extends Controller
      * Process validated descriptions and turn those into data set to be used with languages relation.
      * Desctiptions with empty values are removed.
      *
-     * @param array $data
+     * @param  array  $data
      * @return Collection
      */
     private function processDescriptions(array $data): Collection
     {
         return collect($data)
-        ->keyBy(function($single) {
+        ->keyBy(function ($single) {
             return $this->languageService->getLanguageIdByCode($single['code']);
         })
-        ->filter(function($single) {
+        ->filter(function ($single) {
             return trim($single['value']) !== '';
         })
-        ->map(function($single) {
+        ->map(function ($single) {
             return [
                 'description' => $single['value'],
             ];
@@ -82,7 +82,7 @@ class AnswerController extends Controller
     {
         $this->authorize('viewAny', Answer::class);
 
-        return Answer::getStatesFor('status')->map(function($state) {
+        return Answer::getStatesFor('status')->map(function ($state) {
             return [
                 'value' => $state::getMorphClass(),
                 'text' => $state::status(),
@@ -93,7 +93,7 @@ class AnswerController extends Controller
     /**
      * Create new Answer and respond with AnswerResource.
      *
-     * @param Request $request
+     * @param  Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
@@ -124,15 +124,15 @@ class AnswerController extends Controller
     /**
      * Update existing Answer and respond with AnswerResource or code 422 if state transition is not allowed.
      *
-     * @param Request $request
-     * @param Answer $answer
+     * @param  Request  $request
+     * @param  Answer  $answer
      * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, Answer $answer)
     {
         $this->authorize('update', $answer);
 
-        $states = Answer::getStatesFor('status')->map(function($state) {
+        $states = Answer::getStatesFor('status')->map(function ($state) {
             return $state::getMorphClass();
         });
         $validatedData = $request->validate([
@@ -150,7 +150,7 @@ class AnswerController extends Controller
         if ($request->has('status')) {
             $statusClass = AnswerState::resolveStateClass($validatedData['status']);
 
-            if (!$answer->canTransitionTo($statusClass) && !$answer->status->is($statusClass)) {
+            if (! $answer->canTransitionTo($statusClass) && ! $answer->status->is($statusClass)) {
                 return response()->json([
                     'message' => 'Status transition is not allowed!',
                 ], 422);
@@ -173,7 +173,7 @@ class AnswerController extends Controller
     /**
      * Responds with published answers that have been translated to a given language.
      *
-     * @param Language $language
+     * @param  Language  $language
      * @return \Illuminate\Http\JsonResponse
      */
     public function apiForLanguage(Language $language)
@@ -182,11 +182,11 @@ class AnswerController extends Controller
 
         Answer::with(['languages'])
         ->whereState('status', [Translated::class, Published::class])
-        ->whereHas('languages', function(Builder $query) use ($language) {
+        ->whereHas('languages', function (Builder $query) use ($language) {
             $query->where('id', '=', $language->id);
         })
-        ->chunk(50, function($answers) use ($language, &$data) {
-            foreach($answers as $answer) {
+        ->chunk(50, function ($answers) use ($language, &$data) {
+            foreach ($answers as $answer) {
                 $data[] = [
                     'id' => $answer->id,
                     'description' => $answer->languages->keyBy('id')->get($language->id)->pivot->description,
@@ -201,9 +201,9 @@ class AnswerController extends Controller
     /**
      * Removes answer from the system.
      *
-     * @param Answer $answer
-     *
+     * @param  Answer  $answer
      * @return JsonResponse
+     *
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function delete(Answer $answer)

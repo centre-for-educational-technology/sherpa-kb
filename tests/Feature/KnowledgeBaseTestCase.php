@@ -9,7 +9,6 @@ use Tests\TestCase;
 
 abstract class KnowledgeBaseTestCase extends TestCase
 {
-
     use RefreshDatabase;
 
     /**
@@ -27,8 +26,9 @@ abstract class KnowledgeBaseTestCase extends TestCase
     /**
      * Returns language identifier by code.
      *
-     * @param string $code Language code
+     * @param  string  $code  Language code
      * @return int
+     *
      * @throws Illuminate\Database\Eloquent\ModelNotFoundException
      */
     protected function getLanguageIdByCode(string $code): int
@@ -39,14 +39,14 @@ abstract class KnowledgeBaseTestCase extends TestCase
     /**
      * Creates new user with given attributes and roles.
      *
-     * @param array $attributes Attributes to set or override
-     * @param array $roles      User roles to assign
+     * @param  array  $attributes  Attributes to set or override
+     * @param  array  $roles  User roles to assign
      * @return User
      */
     protected function createUser(array $attributes = [], array $roles = []): User
     {
         // Preset language to English unless a value is provided with attributes
-        if (!array_key_exists('language_id', $attributes)) {
+        if (! array_key_exists('language_id', $attributes)) {
             $attributes['language_id'] = $this->getLanguageIdByCode('en');
         }
 
@@ -62,11 +62,12 @@ abstract class KnowledgeBaseTestCase extends TestCase
     /**
      * Creates user with language expert role.
      *
-     * @param string $language  Language with default value of en
-     * @param array $attributes Attributes to set or override
+     * @param  string  $language  Language with default value of en
+     * @param  array  $attributes  Attributes to set or override
      * @return User
      */
-    protected function createLanguageExpert(string $language = 'en', array $attributes = []): User {
+    protected function createLanguageExpert(string $language = 'en', array $attributes = []): User
+    {
         $attributes['language_id'] = $this->getLanguageIdByCode($language);
 
         return $this->createUser($attributes, [User::ROLE_LANGUAGE_EXPERT]);
@@ -75,7 +76,7 @@ abstract class KnowledgeBaseTestCase extends TestCase
     /**
      * Creates user with master expert role.
      *
-     * @param array $attributes Attributes to set or override
+     * @param  array  $attributes  Attributes to set or override
      * @return User
      */
     protected function createMasterExpert(array $attributes = []): User
@@ -86,12 +87,11 @@ abstract class KnowledgeBaseTestCase extends TestCase
     /**
      * Creates user with administrator role.
      *
-     * @param array $attributes Attributes to set or override
+     * @param  array  $attributes  Attributes to set or override
      * @return User
      */
     protected function createAdministrator(array $attributes = []): User
     {
         return $this->createUser($attributes, [User::ROLE_ADMINISTRATOR]);
     }
-
 }

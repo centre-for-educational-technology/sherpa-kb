@@ -2,25 +2,25 @@
 
 namespace App\Mail;
 
+use App\Language;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use App\Language;
 
 class WeeklyPendingQuestions extends Mailable
 {
     use Queueable, SerializesModels;
 
     /**
-     * Language object
+     * Language object.
      *
      * @var Language
      */
     public $language;
 
     /**
-     * Count of unhandled PendingQuestions
+     * Count of unhandled PendingQuestions.
      *
      * @var int
      */

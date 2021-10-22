@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\User;
+use Illuminate\Console\Command;
 
 class MakeAdministrator extends Command
 {
@@ -42,17 +42,19 @@ class MakeAdministrator extends Command
         $id = $this->argument('user');
         $user = User::find($id);
 
-        if (!$user) {
+        if (! $user) {
             $this->error("Could not find a user with identifier of {$id}!");
+
             return 1;
         }
 
-        if (!$user->hasRole($role)) {
+        if (! $user->hasRole($role)) {
             $user->assignRole($role);
             $this->info("Administrator role was assigned to a user {$user->name}");
+
             return 0;
         }
-        
+
         $this->line("User {$user->name} already has an administrator role!");
 
         return 0;

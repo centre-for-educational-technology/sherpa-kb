@@ -13,10 +13,10 @@ class AnswerPolicy
     use HandlesAuthorization;
 
     /**
-     * Allow admin to perform any actions
+     * Allow admin to perform any actions.
      *
-     * @param \App\User $user
-     * @param string $ability
+     * @param  \App\User  $user
+     * @param  string  $ability
      * @return true|void
      */
     public function before($user, $ability)
@@ -83,7 +83,7 @@ class AnswerPolicy
     {
         if ($user->isMasterExpert()) {
             return true;
-        } else if ($user->isLanguageExpert() && ($answer->status->is(Translated::class) || $answer->status->is(InTranslation::class))) {
+        } elseif ($user->isLanguageExpert() && ($answer->status->is(Translated::class) || $answer->status->is(InTranslation::class))) {
             return true;
         }
 

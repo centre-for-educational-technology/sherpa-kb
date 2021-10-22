@@ -2,25 +2,25 @@
 
 namespace App\Mail;
 
+use App\Language;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use App\Language;
 
 class DailyPendingQuestions extends Mailable
 {
     use Queueable, SerializesModels;
 
     /**
-     * Language object
+     * Language object.
      *
      * @var Language
      */
     public $language;
 
     /**
-     * Count of unhandled PendingQuestions
+     * Count of unhandled PendingQuestions.
      *
      * @var int
      */
@@ -34,7 +34,7 @@ class DailyPendingQuestions extends Mailable
     public function __construct(Language $language, int $count)
     {
         $this->language = $language;
-        $this->count = $count;         
+        $this->count = $count;
     }
 
     /**

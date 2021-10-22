@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 class AnswerControllerTest extends KnowledgeBaseTestCase
 {
-
     /**
      * Answers list JSON response.
      *
@@ -31,7 +30,7 @@ class AnswerControllerTest extends KnowledgeBaseTestCase
         [
             'value' => 'translated',
             'text' => 'Translated',
-        ]
+        ],
     ];
 
     /**
@@ -187,5 +186,4 @@ class AnswerControllerTest extends KnowledgeBaseTestCase
     }
 
     // TODO Test store, update, delete, apiForLanguage
-
 }

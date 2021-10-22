@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 class CSRFTokenControllerTest extends KnowledgeBaseTestCase
 {
-
     /**
      * Test CSRF token refresh with an anonymous user.
      *
@@ -35,5 +34,4 @@ class CSRFTokenControllerTest extends KnowledgeBaseTestCase
             'csrfToken' => csrf_token(),
         ]);
     }
-
 }

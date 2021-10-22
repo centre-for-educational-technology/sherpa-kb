@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 class HomePageTest extends KnowledgeBaseTestCase
 {
-
     /**
      * Tests home page as an anonymous user.
      *
@@ -33,7 +32,7 @@ class HomePageTest extends KnowledgeBaseTestCase
         $response->assertStatus(200);
         $response->assertDontSeeText('Login');
         $response->assertSeeText('Logout');
-        $response->assertSeeText('Hello, ' . $user->name);
+        $response->assertSeeText('Hello, '.$user->name);
         $response->assertSeeText('You do not have sufficient role to use the application. Please contact an administrator to have a role assigned.');
     }
 
@@ -50,7 +49,7 @@ class HomePageTest extends KnowledgeBaseTestCase
             ->get('/home');
 
         $response->assertStatus(200);
-        $response->assertSeeText('Hello, ' . $user->name);
+        $response->assertSeeText('Hello, '.$user->name);
         $response->assertSeeText('Country SELFIE Expert for English');
         $response->assertSee('<app-sync :is-active="appSyncActive" :connection-state="connectionState"></app-sync>', false);
         $response->assertDontSee('<master-expert-view></master-expert-view>', false);
@@ -70,7 +69,7 @@ class HomePageTest extends KnowledgeBaseTestCase
             ->get('/home');
 
         $response->assertStatus(200);
-        $response->assertSeeText('Hello, ' . $user->name);
+        $response->assertSeeText('Hello, '.$user->name);
         $response->assertSeeText('SELFIE master');
         $response->assertSee('<app-sync :is-active="appSyncActive" :connection-state="connectionState"></app-sync>', false);
         $response->assertSee('<master-expert-view></master-expert-view>', false);
@@ -91,11 +90,10 @@ class HomePageTest extends KnowledgeBaseTestCase
 
         $response->assertStatus(200);
         $response->assertSeeText('Users');
-        $response->assertSeeText('Hello, ' . $user->name);
+        $response->assertSeeText('Hello, '.$user->name);
         $response->assertSeeText('SELFIE master');
         $response->assertSee('<app-sync :is-active="appSyncActive" :connection-state="connectionState"></app-sync>', false);
         $response->assertSee('<master-expert-view></master-expert-view>', false);
         $response->assertDontSee('<language-expert-view language="en"></language-expert-view>', false);
     }
-
 }

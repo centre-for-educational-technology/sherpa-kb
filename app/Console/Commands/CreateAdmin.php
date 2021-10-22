@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\User;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
 
 class CreateAdmin extends Command
@@ -47,10 +47,10 @@ class CreateAdmin extends Command
 
         $user->markEmailAsVerified();
 
-        $this->info('Created an account for ' . $user->name);
+        $this->info('Created an account for '.$user->name);
 
         $this->call('permission:make-administrator', [
-            'user' => $user->id
+            'user' => $user->id,
         ]);
     }
 }

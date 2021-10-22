@@ -14,13 +14,13 @@ TRUNCATE TABLE answers;
 SET FOREIGN_KEY_CHECKS = 1;
 */
 
-use Illuminate\Console\Command;
-use App\Topic;
 use App\Answer;
 use App\Question;
 use App\Services\LanguageService;
 use App\States\Answer\Translated as TranslatedAnswer;
 use App\States\Question\Translated as TranslatedQuestion;
+use App\Topic;
+use Illuminate\Console\Command;
 
 class ImportData extends Command
 {
@@ -62,12 +62,12 @@ class ImportData extends Command
         $data = [];
         $handle = fopen($this->argument('file'), 'r');
 
-        while( ($row = fgetcsv($handle)) !== FALSE) {
+        while (($row = fgetcsv($handle)) !== false) {
             $topic = trim($row[0]);
             $question = trim($row[1]);
             $answer = trim($row[2]);
 
-            if (!array_key_exists($answer, $data)) {
+            if (! array_key_exists($answer, $data)) {
                 $data[$answer] = [
                     'answer' => $answer,
                     'questions' => [],
