@@ -55,6 +55,20 @@ class ImportData extends Command
      */
     public function handle(LanguageService $languageService)
     {
+        $languageId = $languageService->getLanguageIdByCode($this->argument('language'));
+
+        if ($languageId === null) {
+            $this->error("Could not find a language with code of {$this->argument('language')}!");
+
+            return 1;
+        }
+
+        if (! file_exists($this->argument('file'))) {
+            $this->error("File {$this->argument('file')} not found!");
+
+            return 1;
+        }
+
         $counts = [
             'answers' => 0,
             'questions' => 0,
@@ -80,8 +94,6 @@ class ImportData extends Command
         }
 
         fclose($handle);
-
-        $languageId = $languageService->getLanguageIdByCode($this->argument('language'));
 
         $topics = Topic::all()->keyBy('description');
 

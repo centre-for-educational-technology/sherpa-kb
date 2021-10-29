@@ -55,4 +55,24 @@ class ConsoleCommandsTest extends KnowledgeBaseTestCase
             ->expectsOutput('Could not find a user with identifier of 2!')
             ->assertExitCode(1);
     }
+
+    /**
+     * Test the sherpa:import-data command.
+     *
+     * @return void
+     */
+    public function test_import_data_command()
+    {
+        $this->artisan(sprintf('sherpa:import-data zz %s', base_path('tests/data/sample_import_data.csv')))
+            ->expectsOutput('Could not find a language with code of zz!')
+            ->assertExitCode(1);
+
+        $this->artisan(sprintf('sherpa:import-data en %s', 'does-not-exist.csv'))
+            ->expectsOutput('File does-not-exist.csv not found!')
+            ->assertExitCode(1);
+
+        $this->artisan(sprintf('sherpa:import-data en %s', base_path('tests/data/sample_import_data.csv')))
+            ->expectsOutput('Imported 10 questions and 4 answers.')
+            ->assertExitCode(0);
+    }
 }
