@@ -7,6 +7,7 @@ use App\States\PendingQuestion\Completed;
 use App\States\PendingQuestion\Pending;
 use App\States\PendingQuestion\PendingQuestionState;
 use App\States\PendingQuestion\Propagated;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -14,6 +15,7 @@ use Spatie\ModelStates\HasStates;
 
 class PendingQuestion extends Model
 {
+    use HasFactory;
     use HasStates;
     use LogsActivity;
 

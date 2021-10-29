@@ -5,7 +5,7 @@ namespace Tests\Feature;
 class FrontPageTest extends KnowledgeBaseTestCase
 {
     /**
-     * Tests front page with as an anonymous user.
+     * Tests front page as an anonymous user.
      *
      * @return void
      */
