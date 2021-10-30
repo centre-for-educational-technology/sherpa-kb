@@ -2,11 +2,38 @@
 
 namespace Tests\Feature;
 
+use App\Console\Commands\SendDailyEmails;
+use App\Console\Commands\SendWeeklyEmails;
+use App\Language;
+use App\Mail\DailyPendingQuestions;
+use App\Mail\WeeklyPendingQuestions;
+use App\PendingQuestion;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class ConsoleCommandsTest extends KnowledgeBaseTestCase
 {
+
+    /**
+     * Creates a PendingQuestion with timestamps set to yesterday and a text in English.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model
+     */
+    private function createPendingQuestion()
+    {
+        $english = Language::where('code', 'en')->first();
+
+        return PendingQuestion::factory([
+            'created_at' => Carbon::yesterday(),
+            'updated_at' => Carbon::yesterday(),
+        ])
+            ->hasAttached($english, ['description' => 'Description'])
+            ->create();
+    }
+
     /**
      * Test the auth:create-admin command.
      *
@@ -74,5 +101,66 @@ class ConsoleCommandsTest extends KnowledgeBaseTestCase
         $this->artisan(sprintf('sherpa:import-data en %s', base_path('tests/data/sample_import_data.csv')))
             ->expectsOutput('Imported 10 questions and 4 answers.')
             ->assertExitCode(0);
+    }
+
+    /**
+     * Test the sherpa:send-daily-emails command.
+     *
+     * @return void
+     */
+    public function test_send_daily_emails_command()
+    {
+        Log::spy();
+        Mail::fake();
+
+        $pendingQuestion = $this->createPendingQuestion();
+
+        Log::shouldReceive('debug')->once()->with('No suitable language experts could be found!', [
+            'language' => $pendingQuestion->languages->first()->name,
+            'count' => 1,
+            'command' => SendDailyEmails::class,
+        ]);
+
+        $this->artisan('sherpa:send-daily-emails')
+            ->assertExitCode(0);
+
+        Mail::assertNothingSent();
+
+        $this->createLanguageExpert();
+        $this->artisan('sherpa:send-daily-emails')
+            ->assertExitCode(0);
+
+        Mail::assertSent(DailyPendingQuestions::class);
+    }
+
+    /**
+     * Test the sherpa:send-weekly-emails command.
+     *
+     * @return void
+     */
+    public function test_send_weekly_emails_command()
+    {
+        Log::spy();
+        Mail::fake();
+
+        $pendingQuestion = $this->createPendingQuestion();
+
+        Log::shouldReceive('debug')->once()->with('No suitable language experts could be found!', [
+            'language' => $pendingQuestion->languages->first()->name,
+            'count' => 1,
+            'command' => SendWeeklyEmails::class,
+        ]);
+
+        $this->artisan('sherpa:send-weekly-emails')
+            ->assertExitCode(0);
+
+        Mail::assertNothingSent();
+
+        $this->createLanguageExpert();
+
+        $this->artisan('sherpa:send-weekly-emails')
+            ->assertExitCode(0);
+
+        Mail::assertSent(WeeklyPendingQuestions::class);
     }
 }

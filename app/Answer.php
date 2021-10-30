@@ -6,6 +6,7 @@ use App\States\Answer\AnswerState;
 use App\States\Answer\InTranslation;
 use App\States\Answer\Published;
 use App\States\Answer\Translated;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -13,6 +14,7 @@ use Spatie\ModelStates\HasStates;
 
 class Answer extends Model
 {
+    use HasFactory;
     use HasStates;
     use LogsActivity;
 

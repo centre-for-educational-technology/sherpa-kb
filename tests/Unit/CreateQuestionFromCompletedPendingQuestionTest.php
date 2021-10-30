@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Events\AnswerCreated;
 use App\Events\QuestionCreated;
 use App\Language;
 use App\Listeners\CreateQuestionFromCompletedPendingQuestion;
@@ -92,7 +93,7 @@ class CreateQuestionFromCompletedPendingQuestionTest extends TestCase
         $this->seed(LanguageSeeder::class);
 
         Event::fake([
-            QuestionCreated::class,
+            AnswerCreated::class,
         ]);
 
         $english = Language::where('code', 'en')->first();

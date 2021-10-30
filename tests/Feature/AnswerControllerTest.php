@@ -2,6 +2,14 @@
 
 namespace Tests\Feature;
 
+use App\Answer;
+use App\Events\AnswerCreated;
+use App\Language;
+use App\States\Answer\Published;
+use App\States\Answer\Translated;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Event;
+
 class AnswerControllerTest extends KnowledgeBaseTestCase
 {
     /**
@@ -34,6 +42,20 @@ class AnswerControllerTest extends KnowledgeBaseTestCase
     ];
 
     /**
+     * Returns a collection of users with all roles defined in the system.
+     *
+     * @return Collection
+     */
+    private function generateUsersOfAllRoles(): Collection
+    {
+        return new Collection([
+            $this->createLanguageExpert(),
+            $this->createMasterExpert(),
+            $this->createAdministrator(),
+        ]);
+    }
+
+    /**
      * Tests answers list with an anonymous user.
      *
      * @return void
@@ -62,51 +84,19 @@ class AnswerControllerTest extends KnowledgeBaseTestCase
     }
 
     /**
-     * Tests answers list with a language expert user.
+     * Tests answers list endpoint with roles that are allowed to access it.
      *
-     * @return void
+     * @retrun void
      */
-    public function test_language_expert_list()
+    public function test_list()
     {
-        $user = $this->createLanguageExpert();
+        $this->generateUsersOfAllRoles()->each(function ($user) {
+            $response = $this->actingAs($user)
+                ->get('/answers');
 
-        $response = $this->actingAs($user)
-            ->get('/answers');
-
-        $response->assertStatus(200);
-        $response->assertExactJson(self::LIST_JSON_RESPONSE);
-    }
-
-    /**
-     * Tests answers list with a master expert user.
-     *
-     * @return void
-     */
-    public function test_master_expert_list()
-    {
-        $user = $this->createMasterExpert();
-
-        $response = $this->actingAs($user)
-            ->get('/answers');
-
-        $response->assertStatus(200);
-        $response->assertExactJson(self::LIST_JSON_RESPONSE);
-    }
-
-    /**
-     * Tests answers list with an administrator user.
-     *
-     * @return void
-     */
-    public function test_admin_list()
-    {
-        $user = $this->createAdministrator();
-
-        $response = $this->actingAs($user)
-            ->get('/answers');
-
-        $response->assertStatus(200);
-        $response->assertExactJson(self::LIST_JSON_RESPONSE);
+            $response->assertStatus(200);
+            $response->assertExactJson(self::LIST_JSON_RESPONSE);
+        });
     }
 
     /**
@@ -138,52 +128,228 @@ class AnswerControllerTest extends KnowledgeBaseTestCase
     }
 
     /**
-     * Tests answers states with a language expert user.
+     * Tests states endpoint with roles that are allowed to access it.
      *
      * @return void
      */
-    public function test_language_expert_states()
+    public function test_states()
+    {
+        $this->generateUsersOfAllRoles()->each(function ($user) {
+            $response = $this->actingAs($user)
+                ->get('/answers/states');
+
+            $response->assertStatus(200);
+            $response->assertExactJson(self::STATES_JSON_RESPONSE);
+        });
+    }
+
+    /**
+     * Tests store action with an anonymous user.
+     *
+     * @return void
+     */
+    public function test_anonymous_store()
+    {
+        $response = $this->post('/answers');
+
+        $response->assertStatus(302);
+        $response->assertRedirect('/login');
+    }
+
+    /**
+     * Tests store action with an authenticated user.
+     *
+     * @returns void
+     */
+    public function test_authenticated_store()
+    {
+        $user = $this->createUser();
+
+        $response = $this->actingAs($user)
+            ->post('/answers');
+
+        $response->assertStatus(403);
+    }
+
+    /**
+     * Tests store action validation rules.
+     *
+     * @return void
+     */
+    public function test_store_validation()
     {
         $user = $this->createLanguageExpert();
 
-        $response = $this->actingAs($user)
-            ->get('/answers/states');
+        $data = new Collection([
+            [
+                'data' => [],
+                'expectedErrors' => [
+                    'descriptions' => 'The descriptions field is required.',
+                ],
+            ],
+            [
+                'data' => [
+                    'descriptions' => [
+                        [],
+                    ],
+                ],
+                'expectedErrors' => [
+                    'descriptions.0.code' => 'The descriptions.0.code field is required.',
+                    'descriptions.0.value' => 'The descriptions.0.value field is required.',
+                ],
+            ],
+        ]);
 
-        $response->assertStatus(200);
-        $response->assertExactJson(self::STATES_JSON_RESPONSE);
+        $data->each(function ($item) use ($user) {
+            $response = $this->actingAs($user)
+                ->post('/answers', $item['data']);
+
+            $response->assertStatus(302);
+            $response->assertSessionHasErrors($item['expectedErrors']);
+        });
     }
 
     /**
-     * Tests answers states with a master expert user.
+     * Test store action with roles that are allowed to access it and setting as translated.
      *
      * @return void
      */
-    public function test_master_expert_states()
+    public function test_store_with_set_translated()
     {
-        $user = $this->createMasterExpert();
+        Event::fake([
+            AnswerCreated::class,
+        ]);
 
-        $response = $this->actingAs($user)
-            ->get('/answers/states');
+        $this->generateUsersOfAllRoles()->each(function ($user) {
+            $response = $this->actingAs($user)
+                ->post('/answers', [
+                    'descriptions' => [
+                        [
+                            'code' => 'en',
+                            'value' => 'Answer text',
+                        ],
+                    ],
+                    'setTranslated' => true,
+                ]);
 
-        $response->assertStatus(200);
-        $response->assertExactJson(self::STATES_JSON_RESPONSE);
+            $response->assertStatus(200);
+            $response->assertJson([
+                'descriptions' => [
+                    'en' => 'Answer text',
+                ],
+                'status' => [
+                    'value' => 'translated',
+                    'status' => 'Translated',
+                ],
+            ]);
+        });
+
+        Event::assertDispatchedTimes(AnswerCreated::class, 3);
     }
 
     /**
-     * Tests answers states with an administrator user.
+     * Test store action with roles that are allowed to access it and not setting as translated.
      *
      * @return void
      */
-    public function test_admin_states()
+    public function test_store_without_set_translated()
     {
-        $user = $this->createAdministrator();
+        Event::fake([
+            AnswerCreated::class,
+        ]);
 
-        $response = $this->actingAs($user)
-            ->get('/answers/states');
+        $this->generateUsersOfAllRoles()->each(function ($user) {
+            $response = $this->actingAs($user)
+                ->post('/answers', [
+                    'descriptions' => [
+                        [
+                            'code' => 'en',
+                            'value' => 'Answer text',
+                        ],
+                    ],
+                ]);
 
-        $response->assertStatus(200);
-        $response->assertExactJson(self::STATES_JSON_RESPONSE);
+            $response->assertStatus(200);
+            $response->assertJson([
+                'descriptions' => [
+                    'en' => 'Answer text',
+                ],
+                'status' => [
+                    'value' => 'in_translation',
+                    'status' => 'inTranslation',
+                ],
+            ]);
+        });
+
+        Event::assertDispatchedTimes(AnswerCreated::class, 3);
     }
 
-    // TODO Test store, update, delete, apiForLanguage
+    /**
+     * Tests update action with an anonymous user.
+     *
+     * @return void
+     */
+    public function test_anonymous_update()
+    {
+        $answer = Answer::factory()->create();
+
+        $response = $this->put('/answers/'.$answer->id);
+
+        $response->assertStatus(302);
+        $response->assertRedirect('/login');
+    }
+
+    /**
+     * Tests update action with an authenticated user.
+     *
+     * @returns void
+     */
+    public function test_authenticated_update()
+    {
+        $user = $this->createUser();
+        $answer = Answer::factory()->create();
+
+        $response = $this->actingAs($user)
+            ->put('/answers/'.$answer->id);
+
+        $response->assertStatus(403);
+    }
+
+    /**
+     * Test answers for language API response.
+     *
+     * @return void
+     */
+    public function test_api_for_language()
+    {
+        $response = $this->get('/api/answers/zz');
+
+        $response->assertStatus(404);
+
+        $response = $this->get('/api/answers/en');
+
+        $response->assertStatus(200);
+        $response->assertExactJson([]);
+
+        $english = Language::where('code', 'en')->first();
+        Answer::factory([
+            'status' => Translated::$name,
+        ])
+            ->hasAttached($english, ['description' => 'Description'])
+            ->create();
+        Answer::factory([
+            'status' => Published::$name,
+        ])
+            ->hasAttached($english, ['description' => 'Description'])
+            ->create();
+
+        $response = $this->get('/api/answers/en');
+        $response->assertStatus(200);
+        $response->assertJsonCount(2);
+        $response->assertJsonFragment([
+            'description' => 'Description',
+        ]);
+    }
+
+    // TODO Test update, delete, apiForLanguage
 }
