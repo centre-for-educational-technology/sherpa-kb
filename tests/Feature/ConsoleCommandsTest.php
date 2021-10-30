@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\Mail;
 
 class ConsoleCommandsTest extends KnowledgeBaseTestCase
 {
-
     /**
      * Creates a PendingQuestion with timestamps set to yesterday and a text in English.
      *
