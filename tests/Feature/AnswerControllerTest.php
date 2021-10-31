@@ -386,7 +386,7 @@ class AnswerControllerTest extends KnowledgeBaseTestCase
                 'expectedErrors' => [
                     'status' => 'The selected status is invalid.',
                 ],
-            ]
+            ],
         ]);
 
         $data->each(function ($item) use ($user, $answer) {

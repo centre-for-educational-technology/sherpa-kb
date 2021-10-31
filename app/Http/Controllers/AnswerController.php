@@ -124,9 +124,10 @@ class AnswerController extends Controller
     /**
      * Update existing Answer and respond with AnswerResource or code 422 if state transition is not allowed.
      *
-     * @param Request $request
-     * @param Answer $answer
+     * @param  Request  $request
+     * @param  Answer  $answer
      * @return \Illuminate\Http\JsonResponse
+     *
      * @throws \Illuminate\Auth\Access\AuthorizationException
      * @throws \Spatie\ModelStates\Exceptions\InvalidConfig
      */
