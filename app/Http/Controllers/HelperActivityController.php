@@ -25,7 +25,7 @@ class HelperActivityController extends Controller
 
         DB::table('helper_activity_log')->insert([
             'question' => $validatedData['question'],
-            'answer' => isset($validatedData['answer']) ? $validatedData['answer'] : '',
+            'answer' => $validatedData['answer'] ?? '',
             'language_code' => $validatedData['languageCode'],
             'ip' => $request->ip(),
             'created_at' => Carbon::now(),
