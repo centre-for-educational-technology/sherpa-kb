@@ -8,7 +8,6 @@ use App\Events\AnswerDeleted;
 use App\Events\AnswerUpdated;
 use App\Language;
 use App\States\Answer\InTranslation;
-use App\States\Answer\Published;
 use App\States\Answer\Translated;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
@@ -254,8 +253,8 @@ class AnswerControllerTest extends KnowledgeBaseTestCase
                     'en' => 'Answer text',
                 ],
                 'status' => [
-                    'value' => 'translated',
-                    'status' => 'Translated',
+                    'value' => Translated::$name,
+                    'status' => Translated::status(),
                 ],
             ]);
         });
@@ -291,8 +290,8 @@ class AnswerControllerTest extends KnowledgeBaseTestCase
                     'en' => 'Answer text',
                 ],
                 'status' => [
-                    'value' => 'in_translation',
-                    'status' => 'inTranslation',
+                    'value' => InTranslation::$name,
+                    'status' => InTranslation::status(),
                 ],
             ]);
         });
@@ -541,12 +540,12 @@ class AnswerControllerTest extends KnowledgeBaseTestCase
         $response->assertExactJson([]);
 
         $english = Language::where('code', 'en')->first();
-        Answer::factory()->translated()
+        Answer::factory()
+            ->translated()
             ->hasAttached($english, ['description' => 'Description'])
             ->create();
-        Answer::factory([
-            'status' => Published::$name,
-        ])
+        Answer::factory()
+            ->published()
             ->hasAttached($english, ['description' => 'Description'])
             ->create();
 
