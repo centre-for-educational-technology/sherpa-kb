@@ -80,7 +80,7 @@ class UserControllerTest extends KnowledgeBaseTestCase
                     'created_at',
                     'language',
                     'roles' => [
-                        '*' => ['id', 'name']
+                        '*' => ['id', 'name'],
                     ],
                 ],
             ],
