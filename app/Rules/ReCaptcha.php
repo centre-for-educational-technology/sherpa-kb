@@ -10,7 +10,7 @@ class ReCaptcha implements Rule
 {
     const ENDPOINT = 'https://www.google.com/recaptcha/api/siteverify';
 
-    private $message;
+    private $message = '';
 
     private $action;
 
