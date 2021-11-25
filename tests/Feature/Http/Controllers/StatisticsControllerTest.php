@@ -60,24 +60,7 @@ class StatisticsControllerTest extends KnowledgeBaseTestCase
      */
     public function test_index()
     {
-        $english = Language::where('code', 'en')->first();
-
-        Answer::getStatesFor('status')->each(function ($state) use ($english) {
-            $answer = Answer::factory([
-                'status' => $state::$name,
-            ])
-                ->hasAttached($english, ['description' => 'Description'])
-                ->create();
-
-            Question::getStatesFor('status')->each(function ($state) use ($english, $answer) {
-                Question::factory([
-                    'status' => $state::$name,
-                    'answer_id' => $answer->id,
-                ])
-                    ->hasAttached($english, ['description' => 'Description'])
-                    ->create();
-            });
-        });
+        $this->createAnswerAndQuestionData();
 
         $users = new Collection([
             $this->createMasterExpert(),

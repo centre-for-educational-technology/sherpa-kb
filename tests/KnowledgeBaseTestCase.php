@@ -2,7 +2,9 @@
 
 namespace Tests;
 
+use App\Answer;
 use App\Language;
+use App\Question;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -92,5 +94,33 @@ abstract class KnowledgeBaseTestCase extends TestCase
     protected function createAdministrator(array $attributes = []): User
     {
         return $this->createUser($attributes, [User::ROLE_ADMINISTRATOR]);
+    }
+
+    /**
+     * Creates data with answers and questions for all possible combination of answer states and question states, while
+     * creating relations between them. Language is set based on provided value with fallback to English.
+     *
+     * @param Language|null $language
+     */
+    protected function createAnswerAndQuestionData(?Language $language = null)
+    {
+        $language = $language ?? Language::where('code', 'en')->first();
+
+        Answer::getStatesFor('status')->each(function ($state) use ($language) {
+            $answer = Answer::factory([
+                'status' => $state::$name,
+            ])
+                ->hasAttached($language, ['description' => 'Description'])
+                ->create();
+
+            Question::getStatesFor('status')->each(function ($state) use ($language, $answer) {
+                Question::factory([
+                    'status' => $state::$name,
+                    'answer_id' => $answer->id,
+                ])
+                    ->hasAttached($language, ['description' => 'Description'])
+                    ->create();
+            });
+        });
     }
 }
