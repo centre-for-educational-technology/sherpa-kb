@@ -4,10 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class CSRFTokenController extends Controller
 {
+    /**
+     * Create new controller instance.
+     * Enforce throttle middleware to only allow up to ten requests per minute.
+     */
+    public function __construct()
+    {
+        $this->middleware('throttle:10,1');
+    }
+
     /**
      * Refreshes CSRF token and returns a new one.
      *
@@ -16,10 +24,6 @@ class CSRFTokenController extends Controller
      */
     public function refresh(Request $request): JsonResponse
     {
-        if (! Auth::check()) {
-            return response()->json([], 403);
-        }
-
         $request->session()->regenerateToken();
 
         return response()->json([
