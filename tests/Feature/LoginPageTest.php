@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Event;
+use Tests\KnowledgeBaseTestCase;
 
 class LoginPageTest extends KnowledgeBaseTestCase
 {

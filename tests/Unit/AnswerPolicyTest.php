@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Answer;
 use App\States\Answer\Published;
 use App\States\Answer\Translated;
+use Tests\KnowledgeBaseTestCase;
 
 class AnswerPolicyTest extends KnowledgeBaseTestCase
 {

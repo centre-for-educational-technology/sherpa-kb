@@ -1,10 +1,11 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Http\Controllers;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Collection;
+use Tests\KnowledgeBaseTestCase;
 use Tests\TestCase;
 
 class UserControllerTest extends KnowledgeBaseTestCase

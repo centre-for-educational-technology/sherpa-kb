@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\UserRole;
+use Tests\KnowledgeBaseTestCase;
 
 class UserModelTest extends KnowledgeBaseTestCase
 {

@@ -1,11 +1,10 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests;
 
 use App\Language;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
 abstract class KnowledgeBaseTestCase extends TestCase
 {

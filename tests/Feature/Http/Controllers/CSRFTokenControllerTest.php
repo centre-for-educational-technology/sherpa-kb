@@ -1,6 +1,8 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Http\Controllers;
+
+use Tests\KnowledgeBaseTestCase;
 
 class CSRFTokenControllerTest extends KnowledgeBaseTestCase
 {

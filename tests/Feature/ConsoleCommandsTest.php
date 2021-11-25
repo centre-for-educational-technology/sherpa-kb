@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Tests\KnowledgeBaseTestCase;
 
 class ConsoleCommandsTest extends KnowledgeBaseTestCase
 {

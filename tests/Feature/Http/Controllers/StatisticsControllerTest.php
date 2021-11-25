@@ -1,11 +1,12 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Http\Controllers;
 
 use App\Answer;
 use App\Language;
 use App\Question;
 use Illuminate\Support\Collection;
+use Tests\KnowledgeBaseTestCase;
 
 class StatisticsControllerTest extends KnowledgeBaseTestCase
 {

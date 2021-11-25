@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Http\Controllers;
 
 use App\Events\TopicCreated;
 use App\Events\TopicDeleted;
@@ -8,6 +8,7 @@ use App\Events\TopicUpdated;
 use App\Topic;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
+use Tests\KnowledgeBaseTestCase;
 
 class TopicControllerTest extends KnowledgeBaseTestCase
 {

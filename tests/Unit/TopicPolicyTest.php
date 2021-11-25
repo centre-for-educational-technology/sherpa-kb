@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Topic;
+use Tests\KnowledgeBaseTestCase;
 
 class TopicPolicyTest extends KnowledgeBaseTestCase
 {

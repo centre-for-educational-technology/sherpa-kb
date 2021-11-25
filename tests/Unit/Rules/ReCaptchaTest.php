@@ -20,6 +20,9 @@ class ReCaptchaTest extends TestCase
      */
     protected $rule;
 
+    /**
+     * Create new ReCaptcha rule before each test.
+     */
     public function setUp(): void
     {
         parent::setUp();
@@ -27,6 +30,14 @@ class ReCaptchaTest extends TestCase
         $this->rule = new ReCaptcha(self::RECAPTCHA_ACTION, 0.5);
     }
 
+    /**
+     * Mocks HTTP request to reCAPTCHA verification endpoint.
+     *
+     * @param bool   $successful HTTP response should be successful.
+     * @param bool   $success    Verification endpoint reported success.
+     * @param float  $score      Verification endpoint reported score.
+     * @param string $action     Verification endpoint reported action based on response value provided.
+     */
     protected function mockHttpRequest(bool $successful = true, bool $success = true, float $score = 1.0, string $action = self::RECAPTCHA_ACTION)
     {
         Http::shouldReceive('asForm')
@@ -65,11 +76,17 @@ class ReCaptchaTest extends TestCase
             });
     }
 
+    /**
+     * Makes sure that verification endpoint address is correct.
+     */
     public function test_has_correct_endpoint()
     {
         $this->assertEquals('https://www.google.com/recaptcha/api/siteverify', $this->rule::ENDPOINT);
     }
 
+    /**
+     * Tests rule validation passes.
+     */
     public function test_recaptcha_pass()
     {
         $this->mockHttpRequest();
@@ -77,6 +94,9 @@ class ReCaptchaTest extends TestCase
         $this->assertEquals('', $this->rule->message());
     }
 
+    /**
+     * Tests rule validation fails with service error.
+     */
     public function test_recaptcha_response_not_successful()
     {
         $this->mockHttpRequest(false);
@@ -84,6 +104,9 @@ class ReCaptchaTest extends TestCase
         $this->assertEquals('reCAPTCHA service error', $this->rule->message());
     }
 
+    /**
+     * Tests rule validation fails because of success value set tot false.
+     */
     public function test_recaptcha_response_not_success()
     {
         $this->mockHttpRequest(true, false);
@@ -91,6 +114,9 @@ class ReCaptchaTest extends TestCase
         $this->assertEquals('reCAPTCHA failed request', $this->rule->message());
     }
 
+    /**
+     * Tests rule validation fails because of wrong action name.
+     */
     public function test_recaptcha_response_wrong_action()
     {
         $this->mockHttpRequest(true, true, 1.0, 'fake');
@@ -98,6 +124,9 @@ class ReCaptchaTest extends TestCase
         $this->assertEquals('reCAPTCHA wrong action', $this->rule->message());
     }
 
+    /**
+     * Tests rule validation fails because of score being too low.
+     */
     public function test_recaptcha_response_score_too_low()
     {
         $this->mockHttpRequest(true, true, 0.2);

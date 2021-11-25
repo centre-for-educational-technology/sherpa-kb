@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Http\Controllers;
 
 use App\Answer;
 use App\Events\AnswerCreated;
@@ -11,6 +11,7 @@ use App\States\Answer\InTranslation;
 use App\States\Answer\Translated;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
+use Tests\KnowledgeBaseTestCase;
 
 class AnswerControllerTest extends KnowledgeBaseTestCase
 {

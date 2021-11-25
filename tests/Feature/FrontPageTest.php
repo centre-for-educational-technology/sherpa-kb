@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use Tests\KnowledgeBaseTestCase;
+
 class FrontPageTest extends KnowledgeBaseTestCase
 {
     /**
