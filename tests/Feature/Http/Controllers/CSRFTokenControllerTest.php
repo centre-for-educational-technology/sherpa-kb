@@ -7,7 +7,6 @@ use Tests\KnowledgeBaseTestCase;
 
 class CSRFTokenControllerTest extends KnowledgeBaseTestCase
 {
-
     protected function assertSuccessfulCsrfResponse(TestResponse $response)
     {
         $response->assertSuccessful();
@@ -50,7 +49,7 @@ class CSRFTokenControllerTest extends KnowledgeBaseTestCase
      */
     public function test_throttle()
     {
-        foreach(range(1, 11) as $index) {
+        foreach (range(1, 11) as $index) {
             $response = $this->post('/refresh_csrf_token');
 
             $remaining = (10 - $index > 0) ? 10 - $index : 0;
