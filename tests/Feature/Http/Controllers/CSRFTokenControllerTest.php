@@ -10,7 +10,7 @@ class CSRFTokenControllerTest extends KnowledgeBaseTestCase
     /**
      * Makes necessary assertions for successful responses.
      *
-     * @param TestResponse $response
+     * @param  TestResponse  $response
      */
     protected function assertSuccessfulCsrfResponse(TestResponse $response)
     {
