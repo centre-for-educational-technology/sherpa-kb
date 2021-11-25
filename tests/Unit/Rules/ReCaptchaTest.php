@@ -33,10 +33,10 @@ class ReCaptchaTest extends TestCase
     /**
      * Mocks HTTP request to reCAPTCHA verification endpoint.
      *
-     * @param bool   $successful HTTP response should be successful.
-     * @param bool   $success    Verification endpoint reported success.
-     * @param float  $score      Verification endpoint reported score.
-     * @param string $action     Verification endpoint reported action based on response value provided.
+     * @param bool $successful HTTP response should be successful.
+     * @param bool $success Verification endpoint reported success.
+     * @param float $score Verification endpoint reported score.
+     * @param string $action Verification endpoint reported action based on response value provided.
      */
     protected function mockHttpRequest(bool $successful = true, bool $success = true, float $score = 1.0, string $action = self::RECAPTCHA_ACTION)
     {
