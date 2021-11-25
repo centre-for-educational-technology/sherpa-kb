@@ -100,7 +100,7 @@ abstract class KnowledgeBaseTestCase extends TestCase
      * Creates data with answers and questions for all possible combination of answer states and question states, while
      * creating relations between them. Language is set based on provided value with fallback to English.
      *
-     * @param Language|null $language
+     * @param  Language|null  $language
      */
     protected function createAnswerAndQuestionData(?Language $language = null)
     {
