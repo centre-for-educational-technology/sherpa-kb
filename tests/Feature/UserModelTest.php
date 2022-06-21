@@ -3,10 +3,10 @@
 namespace Tests\Feature;
 
 use App\UserRole;
+use Tests\KnowledgeBaseTestCase;
 
 class UserModelTest extends KnowledgeBaseTestCase
 {
-
     /**
      * Tests roles relation using UserRole pivot class and role check methods.
      *
@@ -55,5 +55,4 @@ class UserModelTest extends KnowledgeBaseTestCase
 
         $this->assertEquals('et', $user->language->code);
     }
-
 }

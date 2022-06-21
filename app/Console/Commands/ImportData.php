@@ -14,13 +14,13 @@ TRUNCATE TABLE answers;
 SET FOREIGN_KEY_CHECKS = 1;
 */
 
-use Illuminate\Console\Command;
-use App\Topic;
 use App\Answer;
 use App\Question;
 use App\Services\LanguageService;
 use App\States\Answer\Translated as TranslatedAnswer;
 use App\States\Question\Translated as TranslatedQuestion;
+use App\Topic;
+use Illuminate\Console\Command;
 
 class ImportData extends Command
 {
@@ -55,6 +55,20 @@ class ImportData extends Command
      */
     public function handle(LanguageService $languageService)
     {
+        $languageId = $languageService->getLanguageIdByCode($this->argument('language'));
+
+        if ($languageId === null) {
+            $this->error("Could not find a language with code of {$this->argument('language')}!");
+
+            return 1;
+        }
+
+        if (! file_exists($this->argument('file'))) {
+            $this->error("File {$this->argument('file')} not found!");
+
+            return 1;
+        }
+
         $counts = [
             'answers' => 0,
             'questions' => 0,
@@ -62,12 +76,12 @@ class ImportData extends Command
         $data = [];
         $handle = fopen($this->argument('file'), 'r');
 
-        while( ($row = fgetcsv($handle)) !== FALSE) {
+        while (($row = fgetcsv($handle)) !== false) {
             $topic = trim($row[0]);
             $question = trim($row[1]);
             $answer = trim($row[2]);
 
-            if (!array_key_exists($answer, $data)) {
+            if (! array_key_exists($answer, $data)) {
                 $data[$answer] = [
                     'answer' => $answer,
                     'questions' => [],
@@ -80,8 +94,6 @@ class ImportData extends Command
         }
 
         fclose($handle);
-
-        $languageId = $languageService->getLanguageIdByCode($this->argument('language'));
 
         $topics = Topic::all()->keyBy('description');
 

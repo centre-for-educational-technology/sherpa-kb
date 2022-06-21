@@ -11,10 +11,10 @@ class PendingQuestionPolicy
     use HandlesAuthorization;
 
     /**
-     * Allow admin to perform any actions
+     * Allow admin to perform any actions.
      *
-     * @param App/User $user
-     * @param string $ability
+     * @param  \App\User  $user
+     * @param  string  $ability
      * @return true|void
      */
     public function before($user, $ability)

@@ -92,3 +92,10 @@ file in the root of the directory. Please note that internal access to container
 * mailhog
 
 `CACHE_DRIVER` and `SESSION_DRIVER` should be set to `redis`.
+
+## ACKNOWLEDGEMENT
+Supported by [Erasmus+ funding programme](https://ec.europa.eu/info/education/set-projects-education-and-training/erasmus-funding-programme_en#about-the-erasmus-funding-programme).
+
+## LICENSE
+
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.

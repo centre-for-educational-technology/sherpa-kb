@@ -2,16 +2,15 @@
 
 namespace App\Providers;
 
+use App\Listeners\CreateQuestionFromCompletedPendingQuestion;
+use App\Listeners\LogSuccessfulLogin;
+use App\Listeners\LogSuccessfulLogout;
+use Illuminate\Auth\Events\Login;
+use Illuminate\Auth\Events\Logout;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
 use Spatie\ModelStates\Events\StateChanged;
-use App\Listeners\CreateQuestionFromCompletedPendingQuestion;
-use Illuminate\Auth\Events\Login;
-use App\Listeners\LogSuccessfulLogin;
-use Illuminate\Auth\Events\Logout;
-use App\Listeners\LogSuccessfulLogout;
 
 class EventServiceProvider extends ServiceProvider
 {

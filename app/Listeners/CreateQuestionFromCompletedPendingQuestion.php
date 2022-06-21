@@ -3,10 +3,10 @@
 namespace App\Listeners;
 
 use App\Events\QuestionCreated;
-use Spatie\ModelStates\Events\StateChanged;
 use App\PendingQuestion;
 use App\Question;
 use App\States\PendingQuestion\Completed;
+use Spatie\ModelStates\Events\StateChanged;
 
 class CreateQuestionFromCompletedPendingQuestion
 {
@@ -23,7 +23,7 @@ class CreateQuestionFromCompletedPendingQuestion
     /**
      * Handle the event.
      *
-     * @param StateChanged $event
+     * @param  StateChanged  $event
      * @return void
      */
     public function handle(StateChanged $event)
@@ -32,7 +32,7 @@ class CreateQuestionFromCompletedPendingQuestion
             $question = new Question;
             $question->save();
             $question->pendingQuestion()->associate($event->model)->save();
-            $question->languages()->attach($event->model->languages->keyBy('id')->map(function($item) {
+            $question->languages()->attach($event->model->languages->keyBy('id')->map(function ($item) {
                 return [
                     'description' => $item->pivot->description,
                 ];

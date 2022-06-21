@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
 
 class HelperActivityController extends Controller
 {
     /**
-     * Inserts Helper activity question-answer data into the database
+     * Inserts Helper activity question-answer data into the database.
      *
-     * @param Request $request
+     * @param  Request  $request
      * @return JsonResponse
      */
     public function store(Request $request): JsonResponse
@@ -25,7 +25,7 @@ class HelperActivityController extends Controller
 
         DB::table('helper_activity_log')->insert([
             'question' => $validatedData['question'],
-            'answer' => isset($validatedData['answer']) ? $validatedData['answer'] : '',
+            'answer' => $validatedData['answer'] ?? '',
             'language_code' => $validatedData['languageCode'],
             'ip' => $request->ip(),
             'created_at' => Carbon::now(),

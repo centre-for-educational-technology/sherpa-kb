@@ -2,18 +2,20 @@
 
 namespace App;
 
+use App\States\Question\InTranslation;
+use App\States\Question\Published;
+use App\States\Question\QuestionState;
+use App\States\Question\Translated;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Spatie\ModelStates\HasStates;
 use Spatie\Activitylog\Traits\LogsActivity;
-use App\States\Question\QuestionState;
-use App\States\Question\InTranslation;
-use App\States\Question\Translated;
-use App\States\Question\Published;
+use Spatie\ModelStates\HasStates;
 
 class Question extends Model
 {
+    use HasFactory;
     use HasStates;
     use LogsActivity;
 

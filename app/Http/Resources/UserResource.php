@@ -20,7 +20,7 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'email_verified_at' => $this->email_verified_at,
             'created_at' => $this->created_at,
-            'language' => $this->language ? $this->language->id : NULL,
+            'language' => $this->language ? $this->language->id : null,
             'roles' => RoleResource::collection($this->roles),
         ];
     }

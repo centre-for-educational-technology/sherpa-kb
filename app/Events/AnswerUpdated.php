@@ -2,8 +2,8 @@
 
 namespace App\Events;
 
-use App\Http\Resources\AnswerResource;
 use App\Answer;
+use App\Http\Resources\AnswerResource;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
@@ -41,6 +41,11 @@ class AnswerUpdated implements ShouldBroadcastNow
         return new PrivateChannel('App.Sync');
     }
 
+    /**
+     * Answer data to broadcast.
+     *
+     * @return array
+     */
     public function broadcastWith()
     {
         return (new AnswerResource($this->answer))->toArray(request());

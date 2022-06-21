@@ -41,6 +41,11 @@ class QuestionCreated implements ShouldBroadcastNow
         return new PrivateChannel('App.Sync');
     }
 
+    /**
+     * Question data to broadcast.
+     *
+     * @return array
+     */
     public function broadcastWith()
     {
         return (new QuestionResource($this->question))->toArray(request());

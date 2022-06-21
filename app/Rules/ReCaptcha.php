@@ -8,9 +8,9 @@ use Illuminate\Support\Facades\Request;
 
 class ReCaptcha implements Rule
 {
-    CONST ENDPOINT = 'https://www.google.com/recaptcha/api/siteverify';
+    const ENDPOINT = 'https://www.google.com/recaptcha/api/siteverify';
 
-    private $message;
+    private $message = '';
 
     private $action;
 
@@ -19,8 +19,8 @@ class ReCaptcha implements Rule
     /**
      * Create a new rule instance.
      *
-     * @param string $action
-     * @param float $score
+     * @param  string  $action
+     * @param  float  $score
      */
     public function __construct(string $action, float $score)
     {
@@ -43,25 +43,29 @@ class ReCaptcha implements Rule
             'remoteip' => Request::ip(),
         ]);
 
-        if (!$response->successful()) {
+        if (! $response->successful()) {
             $this->message = 'reCAPTCHA service error';
+
             return false;
         }
 
         $responseData = $response->json();
 
-        if ($responseData['success'] !== TRUE) {
+        if ($responseData['success'] !== true) {
             $this->message = 'reCAPTCHA failed request';
+
             return false;
         }
 
         if ($responseData['action'] !== $this->action) {
             $this->message = 'reCAPTCHA wrong action';
+
             return false;
         }
 
         if ($responseData['score'] < $this->score) {
             $this->message = 'reCAPTCHA score too low';
+
             return false;
         }
 

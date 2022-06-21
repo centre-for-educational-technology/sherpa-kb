@@ -2,10 +2,12 @@
 
 namespace Tests\Feature;
 
+use Tests\KnowledgeBaseTestCase;
+
 class FrontPageTest extends KnowledgeBaseTestCase
 {
     /**
-     * Tests front page with as an anonymous user.
+     * Tests front page as an anonymous user.
      *
      * @return void
      */
@@ -34,5 +36,4 @@ class FrontPageTest extends KnowledgeBaseTestCase
         $response->assertStatus(302);
         $response->assertRedirect('/home');
     }
-
 }
